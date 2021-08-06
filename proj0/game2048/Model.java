@@ -5,7 +5,7 @@ import java.util.Observable;
 
 
 /** The state of a game of 2048.
- *  @author TODO: YOUR NAME HERE
+ *  @author : Bolian Chen
  */
 public class Model extends Observable {
     /** Current contents of the board. */
@@ -110,15 +110,84 @@ public class Model extends Observable {
         boolean changed;
         changed = false;
 
-        // TODO: Modify this.board (and perhaps this.score) to account
+        // set the perspective view according to which arrow key being pressed
+        board.setViewingPerspective(side);
+
         // for the tilt to the Side SIDE. If the board changed, set the
         // changed local variable to true.
+        int size = board.size();
+        for (int col = 0; col < size; col += 1) {
+            boolean colChanged = tiltSingleColumn(col, size);
+            if (colChanged) {
+                changed = true;
+            }
+        }
+
+        // reset the perspective view
+        board.setViewingPerspective(Side.NORTH);
 
         checkGameOver();
+
         if (changed) {
             setChanged();
         }
         return changed;
+    }
+
+    /** Tilt the tiles in a single column. Return true iff this
+     * changes the board.
+     */
+    public boolean tiltSingleColumn(int col, int size) {
+
+        int closestOccupiedRow = size; // initialize it to the outside of the board
+        boolean merged = false; // if the closest non-empty tile ever merged
+        boolean colChanged = false;
+
+        // a top-down iteration over row
+        for (int row = size - 1; row >= 0; row -= 1) {
+            Tile t = board.tile(col, row);
+            if (t != null) {
+                closestOccupiedRow = findClosestOccupiedRow(col, row, size);
+                if (closestOccupiedRow == size) {
+                    if (closestOccupiedRow - 1 > row) {
+                        board.move(col, closestOccupiedRow - 1, t);
+                        colChanged = true;
+                    }
+                    continue;
+                }
+                Tile closestOccupiedTile = board.tile(col, closestOccupiedRow);
+                if (!merged) {
+                    if (closestOccupiedTile.value() == t.value()) {
+                        board.move(col, closestOccupiedRow, t);
+                        score += 2 * t.value();
+                        colChanged = true;
+                        merged = true;
+                        continue;
+                    }
+                }
+                if (closestOccupiedRow - 1 > row) {
+                    board.move(col, closestOccupiedRow - 1, t);
+                    colChanged = true;
+                    merged = false;
+                }
+            }
+        }
+        return colChanged;
+    }
+
+    /** Returns the nearest north non-empty row from the given tile
+     * specified by the (col, row). size is to iterate over the board
+     * along the row. This function is called only when the given tile
+     * is non-empty.
+     */
+    public int findClosestOccupiedRow(int col, int row, int size) {
+        for (int i = row + 1; i < size; i += 1) {
+            Tile neighborTile  = board.tile(col, i);
+            if (neighborTile != null) {
+                return i;
+            }
+        }
+        return size;
     }
 
     /** Checks if the game is over and sets the gameOver variable
@@ -137,7 +206,14 @@ public class Model extends Observable {
      *  Empty spaces are stored as null.
      * */
     public static boolean emptySpaceExists(Board b) {
-        // TODO: Fill in this function.
+        int boardSize = b.size();
+        for (int col = 0; col < boardSize; col += 1) {
+            for (int row = 0; row < boardSize; row += 1) {
+                if (b.tile(col, row) == null) {
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
@@ -147,8 +223,78 @@ public class Model extends Observable {
      * given a Tile object t, we get its value with t.value().
      */
     public static boolean maxTileExists(Board b) {
-        // TODO: Fill in this function.
+        int boardSize = b.size();
+        for (int col = 0; col < boardSize; col += 1) {
+            for (int row = 0; row < boardSize; row += 1) {
+                Tile t = b.tile(col, row);
+                if (t != null) {
+                    if (t.value() == MAX_PIECE) {
+                        return true;
+                    }
+                }
+            }
+        }
         return false;
+    }
+
+    /**
+     * Return true if there are two adjacent tiles with the
+     * same value.
+     */
+    public static boolean twoAdjacentTilesSameValue(Board b) {
+        // for each tile, get four or less valid indices for
+        // its adjacent tiles
+        int boardSize = b.size();
+        for (int col = 0; col < boardSize; col += 1) {
+            for (int row = 0; row < boardSize; row += 1) {
+                if (sameTileValueAround(b, col, row)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Return true if there is any adjacent tiles of the tile
+     * at the given (col, row) of the board
+     */
+    public static boolean sameTileValueAround(Board b, int col, int row) {
+        int boardSize = b.size();
+        Tile centerTile = b.tile(col, row);
+        int centerValue = centerTile.value();
+        for (int i = col - 1; i <= col + 1; i += 1) {
+            if (i == col) {
+                continue;
+            }
+            if (isIndexValid(i, boardSize)) {
+                Tile aroundTile = b.tile(i, row);
+                int aroundValue = aroundTile.value();
+                if (centerValue == aroundValue) {
+                    return true;
+                }
+            }
+        }
+        for (int j = row - 1; j <= row +1; j += 1) {
+            if (j == row) {
+                continue;
+            }
+            if (isIndexValid(j, boardSize)) {
+                Tile aroundTile = b.tile(col, j);
+                int aroundValue = aroundTile.value();
+                if (centerValue == aroundValue) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public static boolean isIndexValid(int index, int size) {
+        if (index < 0 || index >= size) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -158,7 +304,11 @@ public class Model extends Observable {
      * 2. There are two adjacent tiles with the same value.
      */
     public static boolean atLeastOneMoveExists(Board b) {
-        // TODO: Fill in this function.
+        if (emptySpaceExists(b)) {
+            return true;
+        } else if (twoAdjacentTilesSameValue(b)) {
+            return true;
+        }
         return false;
     }
 
