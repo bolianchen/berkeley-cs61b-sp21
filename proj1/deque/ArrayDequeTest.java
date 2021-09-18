@@ -6,7 +6,7 @@ import edu.princeton.cs.algs4.StdRandom;
 import java.util.LinkedList;
 
 /** Performs some basic linked list tests. */
-public class LinkedListDequeTest {
+public class ArrayDequeTest {
     @Test
     /** Adds a few things to the list, checking isEmpty() and size() are correct,
      * finally printing the results.
@@ -14,7 +14,7 @@ public class LinkedListDequeTest {
      * && is the "and" operation. */
     public void addIsEmptySizeTest() {
 
-        LinkedListDeque<String> lld1 = new LinkedListDeque<String>();
+        ArrayDeque<String> lld1 = new ArrayDeque<String>();
 
         assertTrue("A newly initialized LLDeque should be empty", lld1.isEmpty());
         lld1.addFirst("front");
@@ -38,7 +38,7 @@ public class LinkedListDequeTest {
     /** Adds an item, then removes an item, and ensures that dll is empty afterwards. */
     public void addRemoveTest() {
 
-        LinkedListDeque<Integer> lld1 = new LinkedListDeque<Integer>();
+        ArrayDeque<Integer> lld1 = new ArrayDeque<Integer>();
         // should be empty
         assertTrue("lld1 should be empty upon initialization", lld1.isEmpty());
 
@@ -55,7 +55,7 @@ public class LinkedListDequeTest {
     /* Tests removing from an empty deque */
     public void removeEmptyTest() {
 
-        LinkedListDeque<Integer> lld1 = new LinkedListDeque<>();
+        ArrayDeque<Integer> lld1 = new ArrayDeque<>();
         lld1.addFirst(3);
 
         lld1.removeLast();
@@ -72,12 +72,12 @@ public class LinkedListDequeTest {
     }
 
     @Test
-    /* Check if you can create LinkedListDeques with different parameterized types*/
+    /* Check if you can create ArrayDeques with different parameterized types*/
     public void multipleParamTest() {
 
-        LinkedListDeque<String> lld1 = new LinkedListDeque<String>();
-        LinkedListDeque<Double> lld2 = new LinkedListDeque<Double>();
-        LinkedListDeque<Boolean> lld3 = new LinkedListDeque<Boolean>();
+        ArrayDeque<String> lld1 = new ArrayDeque<String>();
+        ArrayDeque<Double> lld2 = new ArrayDeque<Double>();
+        ArrayDeque<Boolean> lld3 = new ArrayDeque<Boolean>();
 
         lld1.addFirst("string");
         lld2.addFirst(3.14159);
@@ -89,10 +89,10 @@ public class LinkedListDequeTest {
     }
 
     @Test
-    /* check if null is return when removing from an empty LinkedListDeque. */
+    /* check if null is return when removing from an empty ArrayDeque. */
     public void emptyNullReturnTest() {
 
-        LinkedListDeque<Integer> lld1 = new LinkedListDeque<Integer>();
+        ArrayDeque<Integer> lld1 = new ArrayDeque<Integer>();
 
         boolean passed1 = false;
         boolean passed2 = false;
@@ -105,7 +105,7 @@ public class LinkedListDequeTest {
     /* Add large number of elements to deque; check if order is correct. */
     public void bigLLDequeTest() {
 
-        LinkedListDeque<Integer> lld1 = new LinkedListDeque<Integer>();
+        ArrayDeque<Integer> lld1 = new ArrayDeque<Integer>();
         for (int i = 0; i < 1000000; i++) {
             lld1.addLast(i);
         }
@@ -118,7 +118,6 @@ public class LinkedListDequeTest {
             assertEquals("Should have the same value", i, (double) lld1.removeLast(), 0.0);
         }
     }
-
     public void inplaceChange(ArrayDeque o, int i) {
         if (i%4 == 0) {
             o.addFirst(i);
@@ -144,8 +143,8 @@ public class LinkedListDequeTest {
     @Test
     /* two ArrayDeques having the same items */
     public void equalityTest1() {
-        LinkedListDeque<Integer> lld1 = new LinkedListDeque<Integer>();
-        LinkedListDeque<Integer> lld2 = new LinkedListDeque<Integer>();
+        ArrayDeque<Integer> lld1 = new ArrayDeque<Integer>();
+        ArrayDeque<Integer> lld2 = new ArrayDeque<Integer>();
         int N = 1000;
         for (int i=0; i<N; i+=1) {
             int randVal = StdRandom.uniform(0, 100);
@@ -154,12 +153,13 @@ public class LinkedListDequeTest {
         }
         assertEquals(true, lld1.equals(lld2));
         assertEquals(true, lld2.equals(lld1));
+
     }
     @Test
-    /* two LinkedListDeques having different items */
+    /* two ArrayDeques having different items */
     public void equalityTest2() {
-        LinkedListDeque<Integer> lld1 = new LinkedListDeque<Integer>();
-        LinkedListDeque<Integer> lld2 = new LinkedListDeque<Integer>();
+        ArrayDeque<Integer> lld1 = new ArrayDeque<Integer>();
+        ArrayDeque<Integer> lld2 = new ArrayDeque<Integer>();
         int N = 1000;
         for (int i=0; i<N; i+=1) {
             int randVal = StdRandom.uniform(0, 100);
@@ -171,10 +171,10 @@ public class LinkedListDequeTest {
         assertEquals(false, lld2.equals(lld1));
     }
     @Test
-    /* two LinkedListDeques having different items */
+    /* two ArrayDeques having different items */
     public void equalityTest3() {
-        LinkedListDeque<Integer> lld1 = new LinkedListDeque<Integer>();
-        ArrayDeque<Integer> lld2 = new ArrayDeque<Integer>();
+        ArrayDeque<Integer> lld1 = new ArrayDeque<Integer>();
+        LinkedListDeque<Integer> lld2 = new LinkedListDeque<Integer>();
         int N = 1000;
         for (int i=0; i<N; i+=1) {
             int randVal = StdRandom.uniform(0, 100);
@@ -187,13 +187,13 @@ public class LinkedListDequeTest {
 
     @Test
     /* Conduct randomized tests by comparing with Java's built in
-    * data structure LinkedList */
+     * data structure LinkedList */
     public void randomizedTest() {
         LinkedList<Integer> examiner = new LinkedList<>();
-        LinkedListDeque<Integer> subject = new LinkedListDeque<>();
+        ArrayDeque<Integer> subject = new ArrayDeque<>();
         int N = 50000;
         for (int i = 0; i < N; i += 1) {
-            int operationNumber = StdRandom.uniform(0, 6);
+            int operationNumber = StdRandom.uniform(0, 5);
             if (operationNumber == 0) {
                 // addFirst
                 int randVal = StdRandom.uniform(0, 100);
@@ -223,15 +223,6 @@ public class LinkedListDequeTest {
                     assertEquals(examiner.size(), subject.size());
                 } else {
                     assertEquals(examiner.removeLast(), subject.removeLast());
-                    assertEquals(examiner.size(), subject.size());
-                }
-            } else if (operationNumber == 5) {
-                //get and getRecursive
-                int index = StdRandom.uniform(0, 100);
-                if (index < examiner.size()) {
-                    assertEquals(examiner.get(index), subject.get(index));
-                    assertEquals(examiner.get(index), subject.getRecursive(index));
-                } else {
                     assertEquals(examiner.size(), subject.size());
                 }
             }
