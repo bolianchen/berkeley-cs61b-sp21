@@ -118,19 +118,7 @@ public class LinkedListDequeTest {
             assertEquals("Should have the same value", i, (double) lld1.removeLast(), 0.0);
         }
     }
-
-    public void inplaceChange(ArrayDeque o, int i) {
-        if (i%4 == 0) {
-            o.addFirst(i);
-        } else if (i%4 == 1) {
-            o.addLast(i);
-        } else if (i%4 == 2) {
-            o.removeFirst();
-        } else if (i%4 == 3) {
-            o.removeLast();
-        }
-    }
-    public void inplaceChange(LinkedListDeque o, int i) {
+    public void inplaceChange(Proj1Deque o, int i) {
         if (i%4 == 0) {
             o.addFirst(i);
         } else if (i%4 == 1) {

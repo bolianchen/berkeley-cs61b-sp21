@@ -1,18 +1,46 @@
 package deque;
 
 import edu.princeton.cs.algs4.StdRandom;
+import java.util.Iterator;
 
-public class ArrayDeque<T> {
+public class ArrayDeque<T> implements Proj1Deque<T> {
     private T[] items;
     private int size;
     private int nextFirst;
     private int nextLast;
 
+    /* create an empty array deque */
     public ArrayDeque() {
         items = (T []) new Object[8];
         size = 0;
         nextFirst = 0;
         nextLast = 1;
+    }
+    public ArrayDeque(T[] array) {
+        items = (T []) new Object[8];
+        size = 0;
+        nextFirst = 0;
+        nextLast = 1;
+        for (T i: array) {
+            addLast(i);
+        }
+    }
+    private class ArrayDequeIterator implements Iterator<T> {
+        private int wizPos;
+        public ArrayDequeIterator() {
+            wizPos = updateIndex(nextFirst+1);
+        }
+        public boolean hasNext() {
+            return wizPos != nextLast;
+        }
+        public T next() {
+            T returnItem = items[wizPos];
+            wizPos = updateIndex(wizPos + 1);
+            return returnItem;
+        }
+    }
+    public Iterator<T> iterator() {
+        return new ArrayDequeIterator();
     }
     private int updateIndex(int i) {
         if (i > (items.length - 1)) {
@@ -117,9 +145,10 @@ public class ArrayDeque<T> {
         }
         return true;
     }
+
     public static void main(String[] args) {
         ArrayDeque<Integer> subject = new ArrayDeque();
-        int testRounds = 100;
+        int testRounds = 10;
         for(int i = 0; i < testRounds; ++i) {
             int operationNumber = StdRandom.uniform(0, 6);
             int sampledIndex;
@@ -142,6 +171,9 @@ public class ArrayDeque<T> {
                 subject.printDeque();
             }
         }
-
+        Iterator<Integer> aqseer = subject.iterator();
+        while (aqseer.hasNext()) {
+            System.out.println(aqseer.next());
+        }
     }
 }

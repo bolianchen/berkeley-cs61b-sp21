@@ -2,7 +2,7 @@ package deque;
 
 import edu.princeton.cs.algs4.StdRandom;
 
-public class LinkedListDeque<T> {
+public class LinkedListDeque<T> implements Proj1Deque<T> {
     private IntNode first; 
     private IntNode last;
     private int size;
