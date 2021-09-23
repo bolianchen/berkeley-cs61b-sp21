@@ -1,105 +1,85 @@
 package deque;
 
-import edu.princeton.cs.algs4.StdRandom;
-
 public class LinkedListDeque<T> implements Proj1Deque<T> {
-    private IntNode first; 
-    private IntNode last;
+    private IntNode sentinel;
     private int size;
 
     private class IntNode {
-        private T item; 
+        private T item;
         private IntNode next;
         private IntNode prev;
-        private IntNode(T i, IntNode p, IntNode n){
+        private IntNode(T i, IntNode p, IntNode n) {
             item = i;
             next = n;
-            prev = p; 
+            prev = p;
         }
     }
-    public LinkedListDeque(IntNode f, IntNode l, int s) {
-        first = f;
-        last = l;
-        size = s;
-    }
+    /* Creates an empty linked list deque
+     * an circular sentinel with item null and whose next and prev pointing
+     * to itself
+     */
     public LinkedListDeque() {
-        first = null;
-        last = null;
+        sentinel = new IntNode(null, null, null);
+        sentinel.next = sentinel;
+        sentinel.prev = sentinel;
         size = 0;
     }
+
+    /* Create an linked list deque by giving the sentinel node
+     * and the deque size
+     */
+    public LinkedListDeque(IntNode senti, int s) {
+        sentinel = senti;
+        size = s;
+    }
     public void addFirst(T item) {
-        // first and last would be null or not null at the same time
-        if (first == null) {
-            first = new IntNode(item, null, null);
-            last = first;
-        } else {
-            IntNode newNode = new IntNode(item, null, first);
-            first.prev = newNode;
-            first = newNode;
-        }
+        IntNode temp = sentinel.next;
+        sentinel.next = new IntNode(item, sentinel, sentinel.next);
+        temp.prev = sentinel.next;
         size += 1;
     }
     public void addLast(T item) {
-        IntNode newNode = new IntNode(item, null, null);
-        if (last == null) {
-            last = newNode;
-            first = last;
-        } else {
-            last.next = newNode;
-            IntNode temp = last;
-            last = newNode;
-            last.prev = temp;
-        }
+        IntNode temp = sentinel.prev;
+        sentinel.prev = new IntNode(item, sentinel.prev, sentinel);
+        temp.next = sentinel.prev;
         size += 1;
     }
     public boolean isEmpty() {
         return size() == 0;
     }
-
     public int size() {
         return size;
     }
-
     public void printDeque() {
         if (!isEmpty()) {
-            IntNode p = first;
-            while (p != null) {
+            IntNode p = sentinel.next;
+            int loopsToRun = size;
+            while (loopsToRun > 0) {
                 System.out.print(p.item + " ");
                 p = p.next;
+                loopsToRun -= 1;
             }
             System.out.println();
         }
     }
     public T removeFirst() {
-       if (isEmpty()) {
-           return null;
-       } else if (size()==1) {
-           T result = first.item;
-           first = null;
-           last = null;
-           size -= 1;
-           return result;
-       } else {
-           T result = first.item;
-           first = first.next;
-           first.prev = null;
-           size -= 1;
-           return result;
-       }
+        if (isEmpty()) {
+            return null;
+        } else {
+            T result = sentinel.next.item;
+            sentinel.next = sentinel.next.next;
+            sentinel.next.prev = sentinel;
+            size -= 1;
+            return result;
+        }
     }
     public T removeLast() {
         if (isEmpty()) {
             return null;
-        } else if (size()==1) {
-            T result = last.item;
-            first = null;
-            last = null;
-            size -= 1;
-            return result;
         } else {
-            T result = last.item;
-            last = last.prev;
-            last.next = null;
+            T result = sentinel.prev.item;
+            sentinel.prev = sentinel.prev.prev;
+            sentinel.prev.next = sentinel;
             size -= 1;
             return result;
         }
@@ -108,7 +88,8 @@ public class LinkedListDeque<T> implements Proj1Deque<T> {
         if (index >= size) {
             return null;
         } else {
-            IntNode temp = first;
+            // first node, returned when index is 0;
+            IntNode temp = sentinel.next;
             while (index > 0) {
                 temp = temp.next;
                 index -= 1;
@@ -120,65 +101,44 @@ public class LinkedListDeque<T> implements Proj1Deque<T> {
         if (index >= size) {
             return null;
         } else if (index == 0) {
-            return this.first.item;
+            return sentinel.next.item;
         } else {
-            LinkedListDeque<T> subDeque = new LinkedListDeque<>(this.first.next, this.last, this.size-1);
-            return subDeque.getRecursive(index-1);
+            // create a new deque by shifting the sentinel forward
+            LinkedListDeque<T> newDeque = new LinkedListDeque<>(sentinel.next,size);
+            return newDeque.getRecursive(index-1);
         }
     }
     public boolean equals(Object o) {
         if (!(o instanceof LinkedListDeque)) {
             return false;
         }
-        LinkedListDeque oo = LinkedListDeque.class.cast(o);
-        if (size != oo.size()) {
+        LinkedListDeque cq = (LinkedListDeque) o;
+        if (size != cq.size()) {
             return false;
         }
-        IntNode node1 = first;
-        IntNode node2 = oo.first;
-        while (node1 != null) {
+        IntNode node1 = sentinel.next;
+        IntNode node2 = cq.sentinel.next;
+        int loopsToRun = size;
+        while (loopsToRun > 0) {
             if (!node1.item.equals(node2.item)) {
                 return false;
             }
             node1 = node1.next;
             node2 = node2.next;
+            loopsToRun -= 1;
         }
         return true;
     }
     public static void main(String[] args) {
-        LinkedListDeque<Integer> subject = new LinkedListDeque<>();
-        int testRounds = 100;
-        for (int i=0; i< testRounds; i+=1) {
-            int operationNumber = StdRandom.uniform(0, 6);
-            if (operationNumber == 0) {
-                // addFirst
-                int randVal = StdRandom.uniform(0, 100);
-                subject.addFirst(randVal);
-                System.out.println("addFirst(" + randVal + ")");
-            } else if (operationNumber == 1) {
-                // addLast
-                int randVal = StdRandom.uniform(0, 100);
-                subject.addLast(randVal);
-                System.out.println("addLast(" + randVal + ")");
-            } else if (operationNumber == 2) {
-                //removeFirst
-                System.out.println("removeFirst:" + subject.removeFirst());
-            } else if (operationNumber == 3) {
-                //removeLast
-                System.out.println("removeLast:" + subject.removeLast());
-            } else if (operationNumber == 4) {
-                // get
-                int sampledIndex = StdRandom.uniform(0, subject.size()+10);
-                System.out.println("get " + sampledIndex +"th item:" + subject.get(sampledIndex));
-            } else if (operationNumber == 5) {
-                // printDeque
-                subject.printDeque();
-            }
-        }
+        LinkedListDeque<Integer> cq = new LinkedListDeque<>();
+        cq.addFirst(3);
+        cq.addFirst(5);
+        cq.printDeque();
+        cq.addLast(13);
+        cq.addLast(15);
+        cq.printDeque();
+        cq.removeFirst();
+        cq.removeLast();
+        cq.printDeque();
     }
-
-
-
-    
-    
 }
