@@ -3,6 +3,7 @@ package deque;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import edu.princeton.cs.algs4.StdRandom;
+
 import java.util.LinkedList;
 
 /** Performs some basic linked list tests. */
@@ -118,7 +119,7 @@ public class ArrayDequeTest {
             assertEquals("Should have the same value", i, (double) lld1.removeLast(), 0.0);
         }
     }
-    public void inplaceChange(Proj1Deque o, int i) {
+    public void inplaceChange(Proj1Deque<Integer> o, int i) {
         if (i%4 == 0) {
             o.addFirst(i);
         } else if (i%4 == 1) {

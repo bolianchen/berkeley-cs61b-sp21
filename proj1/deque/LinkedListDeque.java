@@ -1,5 +1,11 @@
 package deque;
 
+import afu.org.checkerframework.checker.igj.qual.I;
+import edu.princeton.cs.algs4.StdRandom;
+
+import java.lang.reflect.Array;
+import java.util.Iterator;
+
 public class LinkedListDeque<T> implements Proj1Deque<T> {
     private IntNode sentinel;
     private int size;
@@ -31,6 +37,23 @@ public class LinkedListDeque<T> implements Proj1Deque<T> {
     public LinkedListDeque(IntNode senti, int s) {
         sentinel = senti;
         size = s;
+    }
+    private class LinkedListDequeIterator implements Iterator<T> {
+       private IntNode wizPos;
+       public LinkedListDequeIterator() {
+           wizPos = sentinel;
+       }
+       public boolean hasNext() {
+           return wizPos.next != sentinel;
+       }
+       public T next() {
+           T returnItem = wizPos.next.item;
+           wizPos = wizPos.next;
+           return returnItem;
+       }
+    }
+    public Iterator<T> iterator() {
+        return new LinkedListDequeIterator();
     }
     public void addFirst(T item) {
         IntNode temp = sentinel.next;
@@ -112,12 +135,12 @@ public class LinkedListDeque<T> implements Proj1Deque<T> {
         if (!(o instanceof LinkedListDeque)) {
             return false;
         }
-        LinkedListDeque cq = (LinkedListDeque) o;
-        if (size != cq.size()) {
+        LinkedListDeque<T> other = (LinkedListDeque<T>) o;
+        if (size != other.size()) {
             return false;
         }
         IntNode node1 = sentinel.next;
-        IntNode node2 = cq.sentinel.next;
+        IntNode node2 = other.sentinel.next;
         int loopsToRun = size;
         while (loopsToRun > 0) {
             if (!node1.item.equals(node2.item)) {
@@ -130,15 +153,33 @@ public class LinkedListDeque<T> implements Proj1Deque<T> {
         return true;
     }
     public static void main(String[] args) {
-        LinkedListDeque<Integer> cq = new LinkedListDeque<>();
-        cq.addFirst(3);
-        cq.addFirst(5);
-        cq.printDeque();
-        cq.addLast(13);
-        cq.addLast(15);
-        cq.printDeque();
-        cq.removeFirst();
-        cq.removeLast();
-        cq.printDeque();
+        LinkedListDeque<Integer> subject = new LinkedListDeque<>();
+        int testRounds = 10;
+        for(int i = 0; i < testRounds; ++i) {
+            int operationNumber = StdRandom.uniform(0, 6);
+            int sampledIndex;
+            if (operationNumber == 0) {
+                sampledIndex = StdRandom.uniform(0, 100);
+                subject.addFirst(sampledIndex);
+                System.out.println("addFirst(" + sampledIndex + ")");
+            } else if (operationNumber == 1) {
+                sampledIndex = StdRandom.uniform(0, 100);
+                subject.addLast(sampledIndex);
+                System.out.println("addLast(" + sampledIndex + ")");
+            } else if (operationNumber == 2) {
+                System.out.println("removeFirst:" + subject.removeFirst());
+            } else if (operationNumber == 3) {
+                System.out.println("removeLast:" + subject.removeLast());
+            } else if (operationNumber == 4) {
+                sampledIndex = StdRandom.uniform(0, subject.size() + 10);
+                System.out.println("get " + sampledIndex + "th item:" + subject.get(sampledIndex));
+            } else if (operationNumber == 5) {
+                subject.printDeque();
+            }
+        }
+        Iterator<Integer> lqseer = subject.iterator();
+        while (lqseer.hasNext()) {
+            System.out.println(lqseer.next());
+        }
     }
 }

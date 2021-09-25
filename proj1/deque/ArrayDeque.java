@@ -132,14 +132,14 @@ public class ArrayDeque<T> implements Proj1Deque<T> {
         if (!(o instanceof ArrayDeque)) {
             return false;
         }
-        ArrayDeque oo = ArrayDeque.class.cast(o);
-        if (size != oo.size()) {
+        ArrayDeque<T> other = (ArrayDeque<T>) o;
+        if (size != other.size()) {
             return false;
         }
         int currPos1 = updateIndex(nextFirst + 1);
-        int currPos2 = updateIndex(oo.nextFirst + 1);
+        int currPos2 = updateIndex(other.nextFirst + 1);
         for(int i = 0; i < size; ++i) {
-            if (!items[currPos1].equals(oo.items[currPos2])) {
+            if (!items[currPos1].equals(other.items[currPos2])) {
                 return false;
             }
         }

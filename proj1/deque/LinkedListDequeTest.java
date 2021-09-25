@@ -118,7 +118,7 @@ public class LinkedListDequeTest {
             assertEquals("Should have the same value", i, (double) lld1.removeLast(), 0.0);
         }
     }
-    public void inplaceChange(Proj1Deque o, int i) {
+    public void inplaceChange(Proj1Deque<Integer> o, int i) {
         if (i%4 == 0) {
             o.addFirst(i);
         } else if (i%4 == 1) {
@@ -159,7 +159,7 @@ public class LinkedListDequeTest {
         assertEquals(false, lld2.equals(lld1));
     }
     @Test
-    /* two LinkedListDeques having different items */
+    /* two Deques of different classes */
     public void equalityTest3() {
         LinkedListDeque<Integer> lld1 = new LinkedListDeque<Integer>();
         ArrayDeque<Integer> lld2 = new ArrayDeque<Integer>();

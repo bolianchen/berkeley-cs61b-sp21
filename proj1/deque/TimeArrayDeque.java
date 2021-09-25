@@ -4,9 +4,9 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import java.util.Iterator;
 import edu.princeton.cs.algs4.Stopwatch;
-public class TimeLinkedListDeque {
+public class TimeArrayDeque {
 
-    private static void printTimingTable(LinkedListDeque<Integer> Ns, LinkedListDeque<Double> times, LinkedListDeque<Integer> opCounts) {
+    private static void printTimingTable(ArrayDeque<Integer> Ns, ArrayDeque<Double> times, ArrayDeque<Integer> opCounts) {
         System.out.printf("%12s %12s %12s %12s\n", "N", "time (s)", "# ops", "microsec/op");
         System.out.printf("------------------------------------------------------------\n");
         for (int i = 0; i < Ns.size(); i += 1) {
@@ -18,20 +18,20 @@ public class TimeLinkedListDeque {
         }
     }
     public static void timeAddFirst() {
-        // construct a 
-        LinkedListDeque<Integer> testList;
+        // construct a
+        ArrayDeque<Integer> testList;
         // test cases, how many items to add preliminarily
         int[] Ns = new int[]{100000, 200000, 400000, 800000, 1600000, 3200000, 6400000, 12800000, 25600000};
         // initialize a stopwatch
         Stopwatch sw = new Stopwatch();
 
-        LinkedListDeque<Integer> addedNumberList = new LinkedListDeque<>();
-        LinkedListDeque<Double> timeList = new LinkedListDeque<>();
-        LinkedListDeque<Integer> opCountList = new LinkedListDeque<>();
+        ArrayDeque<Integer> addedNumberList = new ArrayDeque<>();
+        ArrayDeque<Double> timeList = new ArrayDeque<>();
+        ArrayDeque<Integer> opCountList = new ArrayDeque<>();
 
         for (int N : Ns) {
             // reset the testList
-            testList = new LinkedListDeque<>();
+            testList = new ArrayDeque<>();
             // start timing
             double start = sw.elapsedTime();
             for (int i=0; i<N; i+=1) {
@@ -47,25 +47,27 @@ public class TimeLinkedListDeque {
 
     public static void timeAddLast() {
         // construct a
-        LinkedListDeque<Integer> testList;
+        ArrayDeque<Integer> testList;
         // test cases, how many items to add preliminarily
         int[] Ns = new int[]{100000, 200000, 400000, 800000, 1600000, 3200000, 6400000, 12800000, 25600000};
         // initialize a stopwatch
         Stopwatch sw = new Stopwatch();
 
-        LinkedListDeque<Integer> addedNumberList = new LinkedListDeque<>();
-        LinkedListDeque<Double> timeList = new LinkedListDeque<>();
-        LinkedListDeque<Integer> opCountList = new LinkedListDeque<>();
+        ArrayDeque<Integer> addedNumberList = new ArrayDeque<>();
+        ArrayDeque<Double> timeList = new ArrayDeque<>();
+        ArrayDeque<Integer> opCountList = new ArrayDeque<>();
 
         for (int N : Ns) {
             // reset the testList
-            testList = new LinkedListDeque<>();
+            testList = new ArrayDeque<>();
+
             // start timing
             double start = sw.elapsedTime();
             for (int i=0; i<N; i+=1) {
                 testList.addLast(i);
             }
             // end timing
+
             timeList.addLast(sw.elapsedTime()-start);
             addedNumberList.addLast(N);
             opCountList.addLast(N);
@@ -74,23 +76,27 @@ public class TimeLinkedListDeque {
     }
     public static void timeRemoveFirst() {
         // construct a
-        LinkedListDeque<Integer> testList;
+        ArrayDeque<Integer> testList;
         // test cases, how many items to add preliminarily
-        int[] Ns = new int[]{51200000};
+        int[] Ns = new int[]{51200000, 128000000};
         // how many items to remove
-        int[] Ms = new int[]{12800000, 51200000};
+        int[] Ms = new int[]{12800000, 51200000, 128000000};
 
         // initialize a stopwatch
         Stopwatch sw = new Stopwatch();
 
-        LinkedListDeque<Integer> addedNumberList = new LinkedListDeque<>();
-        LinkedListDeque<Double> timeList = new LinkedListDeque<>();
-        LinkedListDeque<Integer> opCountList = new LinkedListDeque<>();
+        ArrayDeque<Integer> addedNumberList = new ArrayDeque<>();
+        ArrayDeque<Double> timeList = new ArrayDeque<>();
+        ArrayDeque<Integer> opCountList = new ArrayDeque<>();
 
         for (int M : Ms) {
-            for (int N : Ns) {
+            for (int N: Ns) {
+                // omit iteration when removing items more than added items
+                if (M > N) {
+                    continue;
+                }
                 // reset the testList
-                testList = new LinkedListDeque<>();
+                testList = new ArrayDeque<>();
                 // add items
                 for (int i = 0; i < N; i += 1) {
                     testList.addFirst(i);
@@ -111,23 +117,27 @@ public class TimeLinkedListDeque {
 
     public static void timeRemoveLast() {
         // construct a
-        LinkedListDeque<Integer> testList;
+        ArrayDeque<Integer> testList;
         // test cases, how many items to add preliminarily
-        int[] Ns = new int[]{51200000};
+        int[] Ns = new int[]{51200000, 128000000};
         // how many items to remove
-        int[] Ms = new int[]{12800000, 51200000};
+        int[] Ms = new int[]{12800000, 51200000, 128000000};
 
         // initialize a stopwatch
         Stopwatch sw = new Stopwatch();
 
-        LinkedListDeque<Integer> addedNumberList = new LinkedListDeque<>();
-        LinkedListDeque<Double> timeList = new LinkedListDeque<>();
-        LinkedListDeque<Integer> opCountList = new LinkedListDeque<>();
+        ArrayDeque<Integer> addedNumberList = new ArrayDeque<>();
+        ArrayDeque<Double> timeList = new ArrayDeque<>();
+        ArrayDeque<Integer> opCountList = new ArrayDeque<>();
 
         for (int M : Ms) {
-            for (int N : Ns) {
+            for (int N: Ns) {
+                // omit iteration when removing items more than added items
+                if (M > N) {
+                    continue;
+                }
                 // reset the testList
-                testList = new LinkedListDeque<>();
+                testList = new ArrayDeque<>();
                 // add items
                 for (int i = 0; i < N; i += 1) {
                     testList.addFirst(i);
@@ -148,24 +158,25 @@ public class TimeLinkedListDeque {
 
     public static void timeIteration() {
         // construct a
-        LinkedListDeque<Integer> testList;
+        ArrayDeque<Integer> testList;
         // test cases, how many items to add preliminarily
-        int[] Ns = new int[]{1000000, 2000000, 4000000, 8000000, 16000000, 32000000, 64000000};
+        int[] Ns = new int[]{1000000, 2000000, 4000000, 8000000, 16000000, 32000000, 64000000, 128000000};
 
         // initialize a stopwatch
         Stopwatch sw = new Stopwatch();
 
-        LinkedListDeque<Integer> addedNumberList = new LinkedListDeque<>();
-        LinkedListDeque<Double> timeList = new LinkedListDeque<>();
-        LinkedListDeque<Integer> opCountList = new LinkedListDeque<>();
+        ArrayDeque<Integer> addedNumberList = new ArrayDeque<>();
+        ArrayDeque<Double> timeList = new ArrayDeque<>();
+        ArrayDeque<Integer> opCountList = new ArrayDeque<>();
 
         for (int N : Ns) {
             // reset the testList
-            testList = new LinkedListDeque<>();
+            testList = new ArrayDeque<>();
             // add items
             for (int i=0; i<N; i+=1) {
                 testList.addFirst(i);
             }
+
             // start timing
             Iterator<Integer> lqseer = testList.iterator();
             double start = sw.elapsedTime();
@@ -173,22 +184,23 @@ public class TimeLinkedListDeque {
                 lqseer.next();
             }
             // end timing
+
             timeList.addLast(sw.elapsedTime()-start);
             addedNumberList.addLast(N);
-            opCountList.addLast(N);
+            opCountList.addLast(1);
         }
         printTimingTable(addedNumberList, timeList, opCountList);
     }
 
     public static void main(String[] args) {
-        //System.out.println("Timing Table for addLast");
-        //timeAddLast();
-        //System.out.println("Timing Table for addFirst");
-        //timeAddFirst();
-        //System.out.println("Timing Table for removeFirst");
-        //timeRemoveFirst();
-        //System.out.println("Timing Table for removeLast");
-        //timeRemoveLast();
+        System.out.println("Timing Table for addLast");
+        timeAddLast();
+        System.out.println("Timing Table for addFirst");
+        timeAddFirst();
+        System.out.println("Timing Table for removeFirst");
+        timeRemoveFirst();
+        System.out.println("Timing Table for removeLast");
+        timeRemoveLast();
         System.out.println("Timing Table for iteration");
         timeIteration();
     }
