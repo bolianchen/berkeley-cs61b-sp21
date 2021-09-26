@@ -77,9 +77,6 @@ public class ArrayDeque<T> implements Deque<T> {
         nextLast = updateIndex(nextLast + 1);
         size += 1;
     }
-    public boolean isEmpty() {
-        return size == 0;
-    }
     public int size() {
         return size;
     }
