@@ -1,12 +1,10 @@
 package deque;
 
-import afu.org.checkerframework.checker.igj.qual.I;
 import edu.princeton.cs.algs4.StdRandom;
 
-import java.lang.reflect.Array;
 import java.util.Iterator;
 
-public class LinkedListDeque<T> implements Proj1Deque<T> {
+public class LinkedListDeque<T> implements Deque<T> {
     private IntNode sentinel;
     private int size;
 

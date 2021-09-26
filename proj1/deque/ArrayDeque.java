@@ -3,7 +3,7 @@ package deque;
 import edu.princeton.cs.algs4.StdRandom;
 import java.util.Iterator;
 
-public class ArrayDeque<T> implements Proj1Deque<T> {
+public class ArrayDeque<T> implements Deque<T> {
     private T[] items;
     private int size;
     private int nextFirst;
