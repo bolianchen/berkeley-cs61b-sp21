@@ -16,15 +16,7 @@ public class ArrayDeque<T> implements Deque<T> {
         nextFirst = 0;
         nextLast = 1;
     }
-    public ArrayDeque(T[] array) {
-        items = (T []) new Object[8];
-        size = 0;
-        nextFirst = 0;
-        nextLast = 1;
-        for (T i: array) {
-            addLast(i);
-        }
-    }
+
     private class ArrayDequeIterator implements Iterator<T> {
         private int wizPos;
         public ArrayDequeIterator() {
