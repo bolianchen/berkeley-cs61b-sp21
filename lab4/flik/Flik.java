@@ -8,6 +8,8 @@ public class Flik {
      *  @param b Value 2
      *  @return Whether a and b are the same */
     public static boolean isSameNumber(Integer a, Integer b) {
-        return a == b;
+        // for reference type Integer, == comparison only works for numbers 
+        // between -128 and 127
+        return a.equals(b);
     }
 }
