@@ -140,7 +140,7 @@ public class Model extends Observable {
     public boolean tiltSingleColumn(int col, int size) {
 
         int closestOccupiedRow = size; // initialize it to the outside of the board
-        boolean merged = false; // if the closest non-empty tile ever merged
+        boolean merged = false; // track if the closest non-empty row ever merged
         boolean colChanged = false;
 
         // a top-down iteration over row
@@ -148,16 +148,20 @@ public class Model extends Observable {
             Tile t = board.tile(col, row);
             if (t != null) {
                 closestOccupiedRow = findClosestOccupiedRow(col, row, size);
-                if (closestOccupiedRow == size) {
-                    if (closestOccupiedRow - 1 > row) {
-                        board.move(col, closestOccupiedRow - 1, t);
+                // if no occupied rows beyond the current row
+                // move the tile in the current row to the top
+                if (closestOccupiedRow == -1) {
+                    if (size - 1 > row) {
+                        board.move(col, size - 1, t);
                         colChanged = true;
                     }
                     continue;
                 }
-                Tile closestOccupiedTile = board.tile(col, closestOccupiedRow);
+                // if the closest occupied row is not ever merged
+                // and its value equal to the current one
+                Tile closestTile = board.tile(col, closestOccupiedRow);
                 if (!merged) {
-                    if (closestOccupiedTile.value() == t.value()) {
+                    if (closestTile.value() == t.value()) {
                         board.move(col, closestOccupiedRow, t);
                         score += 2 * t.value();
                         colChanged = true;
@@ -165,6 +169,8 @@ public class Model extends Observable {
                         continue;
                     }
                 }
+                // if the closest row is merged once
+                // check if it is feasible to move the current tile below it
                 if (closestOccupiedRow - 1 > row) {
                     board.move(col, closestOccupiedRow - 1, t);
                     colChanged = true;
@@ -187,7 +193,7 @@ public class Model extends Observable {
                 return i;
             }
         }
-        return size;
+        return -1; // not found an occupied row
     }
 
     /** Checks if the game is over and sets the gameOver variable
