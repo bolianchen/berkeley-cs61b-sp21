@@ -127,6 +127,9 @@ public class LinkedListDeque<T> implements Deque<T> {
         }
     }
     public boolean equals(Object o) {
+        if (o == null) {
+            return false;
+        }
         if (!(o instanceof LinkedListDeque)) {
             return false;
         }

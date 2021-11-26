@@ -1,0 +1,39 @@
+#===LinkedListDeque===
+1. What was the most annoying bug you had and how did you fix it? Did you use the debugger? Did you fix it by adding special cases? Did you do any change-and-pray (where you make a tiny change and hope the AG approves)?
+Ans: I do not recall the most annoying bug and adding special cases for it. I did use the debugger for other bugs.
+
+2. Did you end up cutting anything out to make your code simpler? If so, what?
+Ans: Not really, I tried to make it simple at the beginning.
+
+3. Do you have any special cases in your code?
+Ans: No.
+
+4. Do you have any private helper methods?
+Ans: no private helper methods are used
+
+5. Does your code repeat itself anywhere? Would private helper methods have helped?
+Ans: not much repetition and no private helper methods.
+
+6. Were you able to call or reuse code anywhere?
+Ans: I let LinkedListDeque to implement Deque interface in order to access to isEmpty method.
+
+
+#===ArrayDeque===
+1. What was the most annoying bug you had and how did you fix it? Did you use the debugger? Did you fix it by adding special cases? Did you do any change-and-pray (where you make a tiny change and hope the AG approves)?
+Ans: can't recall what is the most annoying bug but I did use the debugger. 
+
+
+2. Did you end up cutting anything out to make your code simpler? If so, what?
+Ans: 
+
+3. Do you have any special cases in your code?
+Ans: can't recall, likely not
+
+4. Do you have any private helper methods?
+Ans: Yes, I have updateIndex and resize methods
+
+5. Does your code repeat itself anywhere? Would private helper methods have helped?
+Ans: not much, two private updateIndex and resize methods are made
+
+6. Were you able to call or reuse code anywhere?
+Ans: yes, by reusing the private methods and isEmpty method inherited from Deque interface
